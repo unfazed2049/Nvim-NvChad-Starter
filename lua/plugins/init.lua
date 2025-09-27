@@ -1,13 +1,48 @@
 return {
+  -- Mason for managing LSP servers, formatters, and linters
+  {
+    "williamboman/mason.nvim",
+    cmd = { "Mason", "MasonInstall", "MasonInstallAll", "MasonUpdate" },
+    event = "User FilePost",
+    opts = require "configs.mason",
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    event = "User FilePost",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require "configs.mason-lspconfig"
+    end,
+  },
+
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    event = "User FilePost",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require "configs.mason-tool-installer"
+    end,
+  },
+
   {
     "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
+    event = "BufWritePre",
     opts = require "configs.conform",
+  },
+
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufNewFile", "BufWritePost" },
+    config = function()
+      require "configs.nvim-lint"
+    end,
   },
 
   -- These are some examples, uncomment them if you want to see them work!
   {
     "neovim/nvim-lspconfig",
+    event = "User FilePost",
     config = function()
       require "configs.lspconfig"
     end,
@@ -59,13 +94,10 @@ return {
   -- test new blink
   -- { import = "nvchad.blink.lazyspec" },
 
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+  {
+  	"nvim-treesitter/nvim-treesitter",
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
+  	opts = require "configs.treesitter",
+  },
 }
